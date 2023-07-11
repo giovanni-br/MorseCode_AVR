@@ -14,6 +14,8 @@ out DDRC,R16       ;Configura portaC como entrada, para cofigurar o pino que des
 out DDRB,R16       ;configura PortaB como entrada
 ldi R16,0b00_00_11_11
 out PORTB,R16        ;Pinos 7-4 pull-up pinos 3-0 pull-down
+ldi	R16, 0b0100000; confirma que o PINC fique em pull-up
+out	PINC,R16    
 
 start:
 ldi R17,0x00
