@@ -1,0 +1,135 @@
+.include m328Pdef.inc
+.org 0x0000
+
+ldi	XL,0x10		;Carrega X com x0100
+ldi	XH,0x00
+
+;configuras ret
+spset:
+ldi	R16,low(RAMEND)
+out	SPL,R16
+ldi	R16,high(RAMEND)
+out	SPH,R16
+
+config_entrada:
+clr R16;
+out DDRD, R16;
+ser R16
+out PORTD, R16;
+
+
+config_saida:
+ser R16;
+out DDRB, R16;
+out PORTB, R16;
+
+
+config_timer:
+ldi	R16,0x00
+sts TCCR1A, R16
+ldi R16,0b00_0_00_101
+out TCCR1B,R16
+ret
+
+config_int:  ;config interrupt em INT0 (PD2) e em PCINT13 (PC5)
+ldi	R16,0b00000001
+sts	EICRA,R16  ;logical change.
+ldi	R16,0b00000010
+out	EIMSK,R16	;Ativa interrupt INT1, ou usar sbi EIMSK,INT0
+
+
+leitura:
+in R16, PIND;
+cp R16, 0b01_11_11_11
+breq sos;
+
+saida:
+ldi R16, 0b00_00_00_11;
+in PORTB, R16;
+ret
+
+sos:
+;s;
+call ponto;
+espaco_msm_letra
+call ponto;
+espaco_msm_letra
+call ponto;
+espaco_msm_letra
+;o;
+call linha;
+espaco_msm_letra
+call linha;
+espaco_msm_letra
+call linha;
+espaco_msm_letra
+call ponto;
+espaco_msm_letra
+call ponto;
+espaco_msm_letra
+call ponto;
+espaco_msm_letra
+
+
+
+ponto:;1 unidade up
+ldi R31, 0x1E
+ldi R32, 0x85
+sts OCR1BH,R31
+sts OCR1BL,R32
+call saida;
+call reset_timer
+ret
+
+linha:;3 unidade up
+ldi R29, 0x5B
+ldi R30, 0x95
+sts OCR1BH,R29
+sts OCR1BL,R30
+call reset_timer
+call saida;
+ret
+
+espaco_msm_letra:;1 unidade down
+ldi R31, 0x1E
+ldi R32, 0x85
+sts OCR1BH,R31
+sts OCR1BL,R32
+call reset_timer
+ret
+
+espaco_letra:; 3 unidades down
+ldi R29, 0x5B
+ldi R30, 0x95
+sts OCR1BH,R29
+sts OCR1BL,R30
+call reset_timer
+ret
+
+espaco_palavra:;7 unidades down
+ldi R37, 0xD5
+ldi R38, 0x9F
+sts OCR1BH,R37
+sts OCR1BL,R38
+call reset_timer
+ret
+
+reset_timer:
+ldi    R16,0x00
+out    TCNT1,R16
+
+
+wait:
+nop
+rjmp	wait		;reinicia wait
+
+
+
+
+
+
+
+
+
+
+;
