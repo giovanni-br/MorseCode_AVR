@@ -8,7 +8,9 @@ This work is related to the discipline Embedded Systems Design(FIS01237).
 * 1 buzzer
 * 1 led
 * 4 10K resistors(pull-down)
-* 1 button
+* 4 buttons
+
+  ![](https://github.com/giovanni-br/MorseCode_AVR/blob/main/morse%20code.png)
 
 
 
