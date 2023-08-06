@@ -24,7 +24,13 @@ rjmp	wait_inf
 
 mensagem:
 sbis PIND, 7;
-rjmp sos;
+rjmp sos
+sbis PIND, 6
+rjmp loveu
+sbis PIND, 5;
+rjmp enfi
+sbis PIND, 4;
+rjmp nota10
 rjmp mensagem ; não temos mais mensagens para testar outro pino
 
 sos:
@@ -34,7 +40,34 @@ call espaco_msm_letra
 call ponto;
 call espaco_msm_letra
 call ponto;
+call espaco_letra
+;o;
+call linha;
 call espaco_msm_letra
+call linha;
+call espaco_msm_letra
+call linha;
+call espaco_letra
+;s;
+call ponto;
+call espaco_msm_letra
+call ponto;
+call espaco_msm_letra
+call ponto;
+cli
+rjmp config;na para o inicio
+
+;--------------------loveu
+loveu:
+;l;
+call ponto;
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call ponto
+call espaco_msm_letra
+call ponto
+call espaco_letra
 ;o;
 call linha;
 call espaco_msm_letra
@@ -42,13 +75,103 @@ call linha;
 call espaco_msm_letra
 call linha;
 call espaco_msm_letra
-call ponto;
+call espaco_letra
+;v;
+call ponto
+call espaco_msm_letra
+call ponto
 call espaco_msm_letra
 call ponto;
 call espaco_msm_letra
+call linha
+call espaco_letra
+;e;
+call ponto
+call espaco_palavra
+;u;
+call ponto
+call espaco_msm_letra
 call ponto;
 call espaco_msm_letra
-rjmp wait_inf; retorna para o inicio
+call linha
+cli
+rjmp config;
+
+;---------- Enfi
+enfi:
+;e;
+call ponto
+call espaco_letra
+;n;
+call linha
+call espaco_msm_letra
+call ponto
+call espaco_letra
+;f;
+call ponto
+call espaco_msm_letra
+call ponto;
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call ponto
+call espaco_letra
+;i;
+call ponto
+call espaco_msm_letra
+call ponto
+cli
+rjmp config;
+
+;---------- Nota 10
+nota10:
+;n;
+call linha
+call espaco_msm_letra
+call ponto
+call espaco_letra
+;o;
+call linha;
+call espaco_msm_letra
+call linha;
+call espaco_msm_letra
+call linha;
+call espaco_msm_letra
+call espaco_letra
+;t;
+call linha
+call espaco_msm_letra
+;a;
+call ponto
+call espaco_msm_letra
+call linha
+call espaco_palavra
+;1;
+call ponto
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+;0;
+call linha
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+call linha
+call espaco_msm_letra
+cli
+rjmp config;
+
+
 
 ponto:;1 unidade up
 ldi R30, 0x1E
