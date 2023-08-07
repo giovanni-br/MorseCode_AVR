@@ -1,3 +1,6 @@
+
+16:55
+
 .include m328Pdef.inc
 .org 0x0000
 rjmp config
@@ -6,10 +9,10 @@ rjmp mensagem
 
 
 config:
-ldi	R16,low(RAMEND)
-out	SPL,R16
-ldi	R16,high(RAMEND)
-out	SPH,R16
+ldi R16,low(RAMEND)
+out SPL,R16
+ldi R16,high(RAMEND)
+out SPH,R16
 call config_entrada
 call config_saida
 call config_timer
@@ -19,7 +22,7 @@ rjmp wait_inf
 
 wait_inf:
 nop
-rjmp	wait_inf
+rjmp wait_inf
 
 
 mensagem:
@@ -177,10 +180,12 @@ ponto:;1 unidade up
 call saida;
 lds R29,TCNT1H
 lds R30,TCNT1L
-cpi R29,0x1E
-brge ponto
-CPI R30,0x85
-brge ponto
+subi R29,0x1E
+;subi R29,0x00
+brmi ponto
+;subi R30,0x05
+subi R30,0x85
+brmi ponto
 call reset_timer
 ret
 
@@ -188,10 +193,12 @@ linha:;3 unidade up
 call saida;
 lds R29,TCNT1H
 lds R30,TCNT1L
-cpi R29,0x5B
-brge linha
-CPI R30,0x95
-brge linha
+subi R29,0x5B
+;subi R29,0x00
+brmi linha
+subi R30,0x95
+;subi R30,0x05
+brmi linha
 call reset_timer
 ret
 
@@ -200,10 +207,12 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-cpi R29,0x1E
-brge espaco_msm_letra
-CPI R30,0x85
-brge espaco_msm_letra
+subi R29,0x1E
+;subi R29,0x00
+brmi espaco_msm_letra
+subi R30,0x85
+;subi R29,0x05
+brmi espaco_msm_letra
 call reset_timer
 ret
 
@@ -212,10 +221,12 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-cpi R29,0x5B
-brge espaco_letra
-CPI R30,0x95
-brge espaco_letra
+subi R29,0x5B
+;subi R29,0x00
+brmi espaco_letra
+subi R30,0x95
+;subi R29,0x05
+brmi espaco_letra
 call reset_timer
 ret
 
@@ -224,17 +235,19 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-cpi R29,0xD5
-brge espaco_palavra
-CPI R30,0x9F
+subi R29,0xD5
+;subi R29,0x00
+brmi espaco_palavra
+subi R30,0x9F
+;subi R29,0x05
 brge espaco_palavra
 call reset_timer
 ret
 
 reset_timer:
-ldi   R16,0x00
-sts   TCNT1L,R16
-sts   TCNT1H,R16
+ldi R16,0x00
+sts TCNT1L,R16
+sts TCNT1H,R16
 ret
 
 saida:
@@ -242,15 +255,13 @@ ldi R16, 0b11_00_00_00;
 out PORTB, R16;
 ret
 
-config_int:  ;config interrupt em INT0 (PD2) e em PCINT13 (PC5)
-ldi	R16,0b00000010
-sts	EICRA,R16  ;descida
-ldi	R16,0b00000001
-out	EIMSK,R16	;Ativa interrupt INT0
-;ldi R16, (1<<PCIE2); Accionar a porta D como PCINT23..16
-;sts PCICR, R16;
-;ldi R16, (1<<PCINT2); configurando o pino D2 como INT0
-;sts PCMSK2, R16;
+config_int: ;config interrupt em INT0 (PD2) e em PCINT13 (PC5)
+ldi R16,0b00000010
+sts EICRA,R16 ;descida
+ldi R16,0b00000001
+out EIMSK,R16 ;Ativa interrupt INT0
+;ldi R16, (1< ;sts PCICR, R16;
+;ldi R16, (1< ;sts PCMSK2, R16;
 sei; seta global interupt
 ret
 
@@ -269,7 +280,7 @@ out PORTB, R16;
 ret
 
 config_timer:
-ldi	R16,0x00; modo normal,
+ldi R16,0x00; modo normal,
 sts TCCR1A, R16
 ldi R16,0b00_0_00_101; 1024 pre scaler
 sts TCCR1B,R16
