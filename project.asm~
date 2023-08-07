@@ -174,55 +174,65 @@ rjmp config;
 
 
 ponto:;1 unidade up
-ldi R30, 0x1E
-ldi R31, 0x85
 call saida;
-sts OCR1BH,R30
-sts OCR1BL,R31
+lds R29,TCNT1H
+lds R30,TCNT1L
+cpi R29,0x1E
+brge ponto
+CPI R30,0x85
+brge ponto
 call reset_timer
 ret
 
 linha:;3 unidade up
-ldi R28, 0x5B
-ldi R29, 0x95
 call saida;
-sts OCR1BH,R28
-sts OCR1BL,R29
+lds R29,TCNT1H
+lds R30,TCNT1L
+cpi R29,0x5B
+brge linha
+CPI R30,0x95
+brge linha
 call reset_timer
 ret
 
 espaco_msm_letra:;1 unidade down
 clr R16
 out PORTB, R16
-ldi R30, 0x1E
-ldi R31, 0x85
-sts OCR1BH,R30
-sts OCR1BL,R3
+lds R29,TCNT1H
+lds R30,TCNT1L
+cpi R29,0x1E
+brge espaco_msm_letra
+CPI R30,0x85
+brge espaco_msm_letra
 call reset_timer
 ret
 
 espaco_letra:; 3 unidades down
 clr R16
 out PORTB, R16
-ldi R28, 0x5B
-ldi R29, 0x95
-sts OCR1BH,R28
-sts OCR1BL,R29
+lds R29,TCNT1H
+lds R30,TCNT1L
+cpi R29,0x5B
+brge espaco_letra
+CPI R30,0x95
+brge espaco_letra
 call reset_timer
 ret
 
 espaco_palavra:;7 unidades down
 clr R16
 out PORTB, R16
-ldi R26, 0xD5
-ldi R27, 0x9F
-sts OCR1BH,R26
-sts OCR1BL,R27
+lds R29,TCNT1H
+lds R30,TCNT1L
+cpi R29,0xD5
+brge espaco_palavra
+CPI R30,0x9F
+brge espaco_palavra
 call reset_timer
 ret
 
 reset_timer:
-ldi    R16,0x00
+ldi   R16,0x00
 sts   TCNT1L,R16
 sts   TCNT1H,R16
 ret
@@ -237,14 +247,12 @@ ldi	R16,0b00000010
 sts	EICRA,R16  ;descida
 ldi	R16,0b00000001
 out	EIMSK,R16	;Ativa interrupt INT0
-ldi R16, (1<<PCIE2); Accionar a porta D como PCINT23..16
-sts PCICR, R16;
-ldi R16, (1<<PCINT2); configurando o pino D2 como INT0
-sts PCMSK2, R16;
+;ldi R16, (1<<PCIE2); Accionar a porta D como PCINT23..16
+;sts PCICR, R16;
+;ldi R16, (1<<PCINT2); configurando o pino D2 como INT0
+;sts PCMSK2, R16;
 sei; seta global interupt
 ret
-
-
 
 config_entrada:
 clr R16;
