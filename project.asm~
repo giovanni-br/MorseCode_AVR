@@ -1,6 +1,3 @@
-
-16:55
-
 .include m328Pdef.inc
 .org 0x0000
 rjmp config
@@ -103,25 +100,42 @@ rjmp config;
 ;---------- Enfi
 enfi:
 ;e;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_letra
 ;n;
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto
+call reset_timer
 call espaco_letra
 ;f;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto
+call reset_timer
 call espaco_letra
 ;i;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto
 cli
 rjmp config;
@@ -180,26 +194,24 @@ ponto:;1 unidade up
 call saida;
 lds R29,TCNT1H
 lds R30,TCNT1L
-subi R29,0x1E
-;subi R29,0x00
-brmi ponto
-;subi R30,0x05
-subi R30,0x85
-brmi ponto
-call reset_timer
+;cpi R29,0x1E
+cpi R29,0x00
+brne ponto
+;cpi R30,0x85
+cpi R30,0x11
+brne ponto
 ret
 
 linha:;3 unidade up
 call saida;
 lds R29,TCNT1H
 lds R30,TCNT1L
-subi R29,0x5B
-;subi R29,0x00
-brmi linha
-subi R30,0x95
-;subi R30,0x05
-brmi linha
-call reset_timer
+;cpi R29,0x5B
+cpi R29,0x00
+brne linha
+cpi R30,0x33
+;cpi R30,0x05
+brne linha
 ret
 
 espaco_msm_letra:;1 unidade down
@@ -207,13 +219,12 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-subi R29,0x1E
-;subi R29,0x00
-brmi espaco_msm_letra
-subi R30,0x85
+;subi R29,0x1E
+cpi R29,0x00
+brne espaco_msm_letra
+cpi R30,0x11
 ;subi R29,0x05
-brmi espaco_msm_letra
-call reset_timer
+brne espaco_msm_letra
 ret
 
 espaco_letra:; 3 unidades down
@@ -221,13 +232,12 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-subi R29,0x5B
-;subi R29,0x00
-brmi espaco_letra
-subi R30,0x95
+;subi R29,0x5B
+cpi R29,0x00
+brne espaco_letra
+cpi R30,0x33
 ;subi R29,0x05
-brmi espaco_letra
-call reset_timer
+brne espaco_letra
 ret
 
 espaco_palavra:;7 unidades down
@@ -235,13 +245,10 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-subi R29,0xD5
-;subi R29,0x00
-brmi espaco_palavra
-subi R30,0x9F
-;subi R29,0x05
-brge espaco_palavra
-call reset_timer
+cpi R29,0x00
+brne espaco_palavra
+cpi R30,0x77
+brne espaco_palavra
 ret
 
 reset_timer:
@@ -260,8 +267,6 @@ ldi R16,0b00000010
 sts EICRA,R16 ;descida
 ldi R16,0b00000001
 out EIMSK,R16 ;Ativa interrupt INT0
-;ldi R16, (1< ;sts PCICR, R16;
-;ldi R16, (1< ;sts PCMSK2, R16;
 sei; seta global interupt
 ret
 
@@ -282,6 +287,6 @@ ret
 config_timer:
 ldi R16,0x00; modo normal,
 sts TCCR1A, R16
-ldi R16,0b00_0_00_101; 1024 pre scaler
+ldi R16,0b00_0_00_11; 128 pre scaler
 sts TCCR1B,R16
 ret
