@@ -35,64 +35,111 @@ rjmp mensagem ; não temos mais mensagens para testar outro pino
 
 sos:
 ;s;
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_letra
 ;o;
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha;
+call reset_timer
 call espaco_letra
 ;s;
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto;
 cli
-rjmp config;na para o inicio
+rjmp config;
 
 ;--------------------loveu
 loveu:
 ;l;
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto
+call reset_timer
 call espaco_letra
 ;o;
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call espaco_letra
 ;v;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_letra
 ;e;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_palavra
 ;u;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
 cli
 rjmp config;
@@ -143,47 +190,85 @@ rjmp config;
 ;---------- Nota 10
 nota10:
 ;n;
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call ponto
+call reset_timer
 call espaco_letra
 ;o;
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha;
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call espaco_letra
 ;t;
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 ;a;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_palavra
 ;1;
+call reset_timer
 call ponto
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
 ;0;
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
+call reset_timer
 call linha
+call reset_timer
 call espaco_msm_letra
 cli
 rjmp config;
@@ -194,10 +279,10 @@ ponto:;1 unidade up
 call saida;
 lds R29,TCNT1H
 lds R30,TCNT1L
-;cpi R29,0x1E
+;cpi R29,0x0F
 cpi R29,0x00
 brne ponto
-;cpi R30,0x85
+;cpi R30,0x42
 cpi R30,0x11
 brne ponto
 ret
@@ -206,11 +291,11 @@ linha:;3 unidade up
 call saida;
 lds R29,TCNT1H
 lds R30,TCNT1L
-;cpi R29,0x5B
+;cpi R29,0x2D
 cpi R29,0x00
 brne linha
+;cpi R30,0xc7
 cpi R30,0x33
-;cpi R30,0x05
 brne linha
 ret
 
@@ -219,11 +304,11 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-;subi R29,0x1E
+;cpi R29,0x0F
 cpi R29,0x00
 brne espaco_msm_letra
+;cpi R30,0x42
 cpi R30,0x11
-;subi R29,0x05
 brne espaco_msm_letra
 ret
 
@@ -232,11 +317,11 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
-;subi R29,0x5B
+;cpi R29,0x2D
 cpi R29,0x00
 brne espaco_letra
+;cpi R30,0xc7
 cpi R30,0x33
-;subi R29,0x05
 brne espaco_letra
 ret
 
@@ -245,8 +330,10 @@ clr R16
 out PORTB, R16
 lds R29,TCNT1H
 lds R30,TCNT1L
+;cpi R29,0x6A
 cpi R29,0x00
 brne espaco_palavra
+;cpi R30,0xD0
 cpi R30,0x77
 brne espaco_palavra
 ret
@@ -287,6 +374,7 @@ ret
 config_timer:
 ldi R16,0x00; modo normal,
 sts TCCR1A, R16
-ldi R16,0b00_0_00_11; 128 pre scaler
+ldi R16,0b00_0_00_11;  64 pre scaler
+;ldi R16,0b00_0_01_01; 8 pre scaler
 sts TCCR1B,R16
 ret
