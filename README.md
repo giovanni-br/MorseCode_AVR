@@ -47,30 +47,6 @@ espaco_msm_letra | 1 unidade = 250 ms  | 3906    | 0F42
 espaco_letra     | 3 unidades = 750 ms | 11719   | 2DC7
 espaco_palavra   | 7 unidades = 1750 ms| 27344   | 6AD0
 
-Subrotina
-delay
-decimal
-hexadecimal
-ponto
-1 unidade = 250 ms
-3906
-0F42
-linha
-3 unidade = 750 ms
-11719
-2DC7
-espaco_msm_letra
-1 unidade = 250 ms
-3906
-0F42
-espaco_letra
-3 unidades = 750 ms
-11719
-2DC7
-espaco_palavra
-7 unidades = 1,750 s
-27344
-6AD0
 
 
 **Nota:** Para fins de simulação, (onde o clock do timer corre mais devagar que na vida real), alteramos a configuração do timer que originalmente tem um prescaler de x1024 para um prescaler de x64. Por isso, a linha 378 do código estará comentada. Ademais, alterou-se para 0x0011 a unidade de tempo; originalmente uma unidade de tempo corresponde a 0x0F42.
